@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 
 
 struct ArrayStack{
@@ -36,7 +37,16 @@ void push(int data, struct ArrayStack *S)
     if(isFullStack(S)) doubleStack(S);
 
     S->array[++S->top] = data;
-    printf("top = %d\n", S->top);
+}
+
+int pop(struct ArrayStack *S)
+{
+    if(isEmptyStack(S)) {
+        printf("stack is empty\n");
+        return INT_MIN;
+    }
+
+    return S->array[S->top--];
 }
 
 void displayStack(struct ArrayStack *S)
@@ -50,18 +60,45 @@ void displayStack(struct ArrayStack *S)
     }
 }
 
+void printMenu()
+{
+    printf("stack operation\n");
+    printf("================\n");
+    printf(" (p)ush\n");
+    printf("  p(o)p\n");
+    printf(" (d)isply stack\n");
+    printf(" (e)xit\n");
+}
+
 int main()
 {
     struct ArrayStack *S = NULL;
+    int i, data;
+    char choice;
+
     S = createStack();
 
     if(!S) printf("Stack creation failed\n");
 
-    push(1, S);
-    push(9, S);
-    push(4, S);
+    while(choice != 'e') {
+        printMenu();
+        scanf("%c", &choice);
 
-    displayStack(S);
-    
+        switch(choice) {
+            case 'p' :
+                printf("enter data\n");
+                scanf("%d", &data);
+                push(data, S);
+                break;
+            case 'o' :
+                printf("poped data = %d\n", pop(S));
+                break;
+            case 'd' :
+                displayStack(S);
+                break;
+            case 'e' :
+                break;
+        }
+    }
     return 0;
 }
